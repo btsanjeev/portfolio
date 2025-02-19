@@ -1,172 +1,340 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AR Planets</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <title>Interactive AR Planets</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://docs.opencv.org/4.5.0/opencv.js"></script>
     <style>
-        .ui-overlay {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            font-family: Arial, sans-serif;
-            display: none;
-            z-index: 1000;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        #startButton {
+        #status-container {
             position: fixed;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 10px 20px;
-            background: white;
-            border: none;
-            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-family: Arial, sans-serif;
+            z-index: 1000;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .status-icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background: #ff0000;
+        }
+
+        .status-icon.active {
+            background: #00ff00;
+        }
+
+        #guide-container {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-family: Arial, sans-serif;
+            z-index: 1000;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        #planet-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-family: Arial, sans-serif;
+            transform: translateY(200%);
+            transition: transform 0.3s ease;
             z-index: 1000;
         }
 
-        .instructions {
+        #planet-info.visible {
+            transform: translateY(0);
+        }
+
+        #debug-canvas {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
+            top: 10px;
+            right: 10px;
+            width: 160px;
+            height: 120px;
+            border: 2px solid white;
+            border-radius: 8px;
             z-index: 1000;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            z-index: 2000;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin-top: 20px;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #00ff00;
+            border-radius: 2px;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
-<body style="margin: 0; overflow: hidden;">
-    <div class="instructions" id="instructions">
-        Point your camera at a flat surface to begin
+<body>
+    <div class="loading-screen" id="loading">
+        <h2>Loading AR Experience</h2>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
     </div>
-    <div class="ui-overlay" id="planetInfo">
-        <h2 id="planetTitle">Planet Name</h2>
-        <p id="planetDescription">Planet description will appear here.</p>
+
+    <div id="status-container">
+        <span class="status-icon"></span>
+        <span id="status-text">Initializing camera...</span>
     </div>
 
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix;"
-             renderer="logarithmicDepthBuffer: true;"
-             vr-mode-ui="enabled: false">
-        
-        <!-- Planets -->
-        <a-entity id="planetSystem" position="0 0.5 -1">
-            <!-- Mars -->
-            <a-sphere id="mars"
-                     position="-0.5 0 0"
-                     radius="0.2"
-                     material="shader: standard; 
-                              color: #c1440e;
-                              metalness: 0.2;
-                              roughness: 0.7"
-                     class="clickable"
-                     data-info="Mars: The Red Planet. Known for its reddish appearance and potential for future human colonization.">
-                <a-animation attribute="rotation"
-                           dur="24000"
-                           to="0 360 0"
-                           repeat="indefinite"
-                           easing="linear">
-                </a-animation>
-            </a-sphere>
+    <div id="guide-container">
+        <p id="guide-text">Please wait while we initialize the AR experience...</p>
+    </div>
 
-            <!-- Earth -->
-            <a-sphere id="earth"
-                     position="0.5 0 0"
-                     radius="0.25"
-                     material="shader: standard;
-                              color: #2233ff;
-                              metalness: 0.2;
-                              roughness: 0.7"
-                     class="clickable"
-                     data-info="Earth: Our home planet. The only known planet to support life, with diverse ecosystems and climates.">
-                <a-animation attribute="rotation"
-                           dur="20000"
-                           to="0 360 0"
-                           repeat="indefinite"
-                           easing="linear">
-                </a-animation>
-            </a-sphere>
+    <div id="planet-info">
+        <h2 id="planet-name"></h2>
+        <p id="planet-description"></p>
+    </div>
 
-            <!-- Venus -->
-            <a-sphere id="venus"
-                     position="0 0.5 0"
-                     radius="0.22"
-                     material="shader: standard;
-                              color: #ffd700;
-                              metalness: 0.3;
-                              roughness: 0.6"
-                     class="clickable"
-                     data-info="Venus: The hottest planet in our solar system due to its thick atmosphere creating a runaway greenhouse effect.">
-                <a-animation attribute="rotation"
-                           dur="22000"
-                           to="0 360 0"
-                           repeat="indefinite"
-                           easing="linear">
-                </a-animation>
-            </a-sphere>
-        </a-entity>
-
-        <!-- Camera -->
-        <a-entity camera></a-entity>
-        
-        <!-- Marker -->
-        <a-marker-camera preset="hiro"></a-marker-camera>
-    </a-scene>
+    <canvas id="debug-canvas"></canvas>
 
     <script>
-        window.addEventListener('load', () => {
-            const instructions = document.getElementById('instructions');
-            const planetInfo = document.getElementById('planetInfo');
-            const planetTitle = document.getElementById('planetTitle');
-            const planetDescription = document.getElementById('planetDescription');
-            
-            // Hide instructions after 5 seconds
-            setTimeout(() => {
-                instructions.style.display = 'none';
-            }, 5000);
+        let camera, scene, renderer, planets;
+        let surfaceFound = false;
+        let planetsPlaced = false;
 
-            // Add click listeners to all planets
-            const planets = document.querySelectorAll('.clickable');
-            planets.forEach(planet => {
-                planet.addEventListener('click', function(evt) {
-                    // Show planet info
-                    const info = this.getAttribute('data-info');
-                    const name = this.id.charAt(0).toUpperCase() + this.id.slice(1);
-                    planetTitle.textContent = name;
-                    planetDescription.textContent = info;
-                    planetInfo.style.display = 'block';
+        const statusIcon = document.querySelector('.status-icon');
+        const statusText = document.getElementById('status-text');
+        const guideText = document.getElementById('guide-text');
+        const planetInfo = document.getElementById('planet-info');
+        const loadingScreen = document.getElementById('loading');
+        const progress = document.getElementById('progress');
 
-                    // Scale animation on click
-                    this.setAttribute('scale', '1.2 1.2 1.2');
-                    setTimeout(() => {
-                        this.setAttribute('scale', '1 1 1');
-                    }, 300);
+        // Planet data
+        const planetData = {
+            mars: {
+                name: "Mars",
+                color: 0xff4444,
+                radius: 0.2,
+                position: [-0.5, 0, -1],
+                description: "Mars is the fourth planet from the Sun. Known as the Red Planet, it has a thin atmosphere and features the largest volcano in the Solar System."
+            },
+            earth: {
+                name: "Earth",
+                color: 0x4444ff,
+                radius: 0.25,
+                position: [0, 0, -1],
+                description: "Earth is our home planet, the only known planet to support life. It has one natural satellite, the Moon, and is the third planet from the Sun."
+            },
+            venus: {
+                name: "Venus",
+                color: 0xffaa44,
+                radius: 0.22,
+                position: [0.5, 0, -1],
+                description: "Venus is the second planet from the Sun. It's the hottest planet in our solar system due to its thick atmosphere of carbon dioxide."
+            }
+        };
 
-                    // Hide info after 5 seconds
-                    setTimeout(() => {
-                        planetInfo.style.display = 'none';
-                    }, 5000);
+        // Initialize OpenCV
+        function onOpenCvReady() {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(stream => {
+                    const video = document.createElement('video');
+                    video.srcObject = stream;
+                    video.play();
+
+                    initThreeJS();
+                    detectSurface(video);
+                })
+                .catch(err => {
+                    console.error('Camera access denied:', err);
+                    statusText.textContent = 'Camera access denied';
                 });
+        }
 
-                // Add hover effect
-                planet.addEventListener('mouseenter', function() {
-                    this.setAttribute('scale', '1.1 1.1 1.1');
+        // Surface detection using OpenCV
+        function detectSurface(video) {
+            const canvas = document.getElementById('debug-canvas');
+            const ctx = canvas.getContext('2d');
+            const cap = new cv.VideoCapture(video);
+            const src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+            const dst = new cv.Mat();
+
+            function processVideo() {
+                cap.read(src);
+                cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);
+                cv.GaussianBlur(dst, dst, new cv.Size(5, 5), 0, 0);
+                cv.Canny(dst, dst, 50, 150, 3);
+
+                // Check for horizontal lines (potential surfaces)
+                const lines = new cv.Mat();
+                cv.HoughLines(dst, lines, 1, Math.PI / 180, 100);
+
+                if (lines.rows > 0 && !surfaceFound) {
+                    surfaceFound = true;
+                    statusIcon.classList.add('active');
+                    statusText.textContent = 'Surface detected';
+                    guideText.textContent = 'Surface found! Move around to see the planets. Click on them for more information.';
+                    placePlanets();
+                }
+
+                cv.imshow(canvas, dst);
+                requestAnimationFrame(processVideo);
+            }
+
+            processVideo();
+        }
+
+        // Three.js initialization
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(0, 10, 5);
+            scene.add(directionalLight);
+
+            animate();
+            updateLoadingProgress(50);
+        }
+
+        function placePlanets() {
+            planets = [];
+            Object.entries(planetData).forEach(([key, data]) => {
+                const geometry = new THREE.SphereGeometry(data.radius, 32, 32);
+                const material = new THREE.MeshStandardMaterial({
+                    color: data.color,
+                    metalness: 0.3,
+                    roughness: 0.7,
                 });
-                planet.addEventListener('mouseleave', function() {
-                    this.setAttribute('scale', '1 1 1');
+                const planet = new THREE.Mesh(geometry, material);
+                planet.position.set(...data.position);
+                planet.userData = data;
+                scene.add(planet);
+                planets.push(planet);
+
+                // Add atmosphere
+                const atmosphereGeo = new THREE.SphereGeometry(data.radius * 1.1, 32, 32);
+                const atmosphereMat = new THREE.MeshPhongMaterial({
+                    color: data.color,
+                    transparent: true,
+                    opacity: 0.2,
+                    side: THREE.BackSide
                 });
+                const atmosphere = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+                planet.add(atmosphere);
             });
-        });
+
+            planetsPlaced = true;
+            updateLoadingProgress(100);
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 1000);
+        }
+
+        function updateLoadingProgress(value) {
+            progress.style.width = `${value}%`;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (planets) {
+                planets.forEach(planet => {
+                    planet.rotation.y += 0.01;
+                });
+            }
+            renderer.render(scene, camera);
+        }
+
+        // Handle clicks/touches
+        function onTouch(event) {
+            if (!planetsPlaced) return;
+
+            const raycaster = new THREE.Raycaster();
+            const touch = new THREE.Vector2();
+            
+            touch.x = (event.clientX / window.innerWidth) * 2 - 1;
+            touch.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(touch, camera);
+            const intersects = raycaster.intersectObjects(planets);
+
+            if (intersects.length > 0) {
+                const planet = intersects[0].object;
+                showPlanetInfo(planet.userData);
+            }
+        }
+
+        function showPlanetInfo(planetData) {
+            const planetNameEl = document.getElementById('planet-name');
+            const planetDescEl = document.getElementById('planet-description');
+            
+            planetNameEl.textContent = planetData.name;
+            planetDescEl.textContent = planetData.description;
+            planetInfo.classList.add('visible');
+
+            setTimeout(() => {
+                planetInfo.classList.remove('visible');
+            }, 5000);
+        }
+
+        window.addEventListener('click', onTouch);
+        window.addEventListener('touchstart', (e) => onTouch(e.touches[0]));
+
+        // Start the experience
+        updateLoadingProgress(25);
+        if (cv) {
+            onOpenCvReady();
+        } else {
+            cv.onRuntimeInitialized = onOpenCvReady;
+        }
     </script>
 </body>
 </html>
