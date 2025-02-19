@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Planets Experience</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        canvas { width: 100vw; height: 100vh; }
+        #ar-button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: white;
+            border-radius: 25px;
+            border: none;
+            font-size: 16px;
+            z-index: 100;
+        }
+        .info-card {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-family: Arial, sans-serif;
+            transform: translateY(200%);
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+        .info-card.visible {
+            transform: translateY(0);
+        }
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading" class="loading">Loading AR Experience...</div>
+    <button id="ar-button">Start AR</button>
+    <div id="info-card" class="info-card">
+        <h2 id="planet-name"></h2>
+        <p id="planet-info"></p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Planet data
+        const planetData = {
+            mercury: {
+                name: "Mercury",
+                radius: 0.3,
+                position: [-1, 0, -2],
+                color: 0xa0522d,
+                info: "Mercury is the smallest and innermost planet in the Solar System. Its orbital period around the Sun of 87.97 days is the shortest of all the planets."
+            },
+            venus: {
+                name: "Venus",
+                radius: 0.4,
+                position: [1, 0, -2],
+                color: 0xdeb887,
+                info: "Venus is the second planet from the Sun and is Earth's closest planetary neighbor. It's one of the four inner, terrestrial planets."
+            },
+            mars: {
+                name: "Mars",
+                radius: 0.35,
+                position: [0, 1, -2],
+                color: 0xcd5c5c,
+                info: "Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System. Known as the Red Planet due to its reddish appearance."
+            }
+        };
+
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // XR setup
+        if (navigator.xr) {
+            navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+                if (supported) {
+                    document.getElementById('ar-button').addEventListener('click', startAR);
+                } else {
+                    console.log('AR not supported');
+                }
+            });
+        }
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(0, 10, 5);
+        scene.add(directionalLight);
+
+        // Create planets
+        const planets = [];
+        Object.entries(planetData).forEach(([key, data]) => {
+            const geometry = new THREE.SphereGeometry(data.radius, 32, 32);
+            const material = new THREE.MeshStandardMaterial({
+                color: data.color,
+                metalness: 0.3,
+                roughness: 0.7,
+            });
+            const planet = new THREE.Mesh(geometry, material);
+            planet.position.set(...data.position);
+            planet.userData.name = data.name;
+            planet.userData.info = data.info;
+            scene.add(planet);
+            planets.push(planet);
+
+            // Add atmosphere
+            const atmosphereGeo = new THREE.SphereGeometry(data.radius * 1.1, 32, 32);
+            const atmosphereMat = new THREE.MeshPhongMaterial({
+                color: data.color,
+                transparent: true,
+                opacity: 0.2,
+                side: THREE.BackSide
+            });
+            const atmosphere = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+            planet.add(atmosphere);
+        });
+
+        // Raycaster for interaction
+        const raycaster = new THREE.Raycaster();
+        let currentSession = null;
+        const infoCard = document.getElementById('info-card');
+        const planetName = document.getElementById('planet-name');
+        const planetInfo = document.getElementById('planet-info');
+
+        async function startAR() {
+            if (navigator.xr) {
+                try {
+                    const session = await navigator.xr.requestSession('immersive-ar', {
+                        requiredFeatures: ['hit-test'],
+                        optionalFeatures: ['dom-overlay'],
+                        domOverlay: { root: document.body }
+                    });
+                    
+                    session.addEventListener('end', () => {
+                        currentSession = null;
+                        document.getElementById('ar-button').style.display = 'block';
+                    });
+
+                    currentSession = session;
+                    setupARSession(session);
+                    document.getElementById('ar-button').style.display = 'none';
+                } catch (error) {
+                    console.error('Error starting AR session:', error);
+                }
+            }
+        }
+
+        function setupARSession(session) {
+            renderer.xr.enabled = true;
+            renderer.xr.setReferenceSpaceType('local');
+            renderer.xr.setSession(session);
+
+            session.addEventListener('select', (event) => {
+                const frame = event.frame;
+                const referenceSpace = renderer.xr.getReferenceSpace();
+                const pose = frame.getPose(event.inputSource.targetRaySpace, referenceSpace);
+
+                if (pose) {
+                    raycaster.ray.origin.set(pose.transform.position.x, pose.transform.position.y, pose.transform.position.z);
+                    raycaster.ray.direction.set(0, 0, -1).applyQuaternion(pose.transform.orientation);
+
+                    const intersects = raycaster.intersectObjects(planets);
+                    if (intersects.length > 0) {
+                        const planet = intersects[0].object;
+                        showPlanetInfo(planet);
+                    }
+                }
+            });
+        }
+
+        function showPlanetInfo(planet) {
+            planetName.textContent = planet.userData.name;
+            planetInfo.textContent = planet.userData.info;
+            infoCard.classList.add('visible');
+            
+            // Hide info card after 5 seconds
+            setTimeout(() => {
+                infoCard.classList.remove('visible');
+            }, 5000);
+        }
+
+        // Animation loop
+        function animate() {
+            renderer.setAnimationLoop(() => {
+                planets.forEach(planet => {
+                    planet.rotation.y += 0.005;
+                });
+                renderer.render(scene, camera);
+            });
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Remove loading message when everything is ready
+        window.addEventListener('load', () => {
+            document.getElementById('loading').style.display = 'none';
+            animate();
+        });
+    </script>
+</body>
+</html>
