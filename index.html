@@ -1,340 +1,1000 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive AR Planets</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://docs.opencv.org/4.5.0/opencv.js"></script>
+    <title>Tarun Sanjeev Banala | Creative Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/enhanced-styles.css">
+    <link rel="stylesheet" href="styles/gallery-styles.css">
+    <link rel="stylesheet" href="styles/advanced-effects.css">
+    <link rel="stylesheet" href="styles/clean-design.css">
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Inline critical CSS to prevent FOUC */
+        body {
+            background-color: #0A0A0A;
+            margin: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
         
-        #status-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 25px;
-            font-family: Arial, sans-serif;
-            z-index: 1000;
-            text-align: center;
-            transition: all 0.3s ease;
+        body.loaded {
+            opacity: 1;
         }
-
-        .status-icon {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-            background: #ff0000;
-        }
-
-        .status-icon.active {
-            background: #00ff00;
-        }
-
-        #guide-container {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 15px;
-            font-family: Arial, sans-serif;
-            z-index: 1000;
-            max-width: 90%;
-            text-align: center;
-        }
-
-        #planet-info {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            font-family: Arial, sans-serif;
-            transform: translateY(200%);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-        }
-
-        #planet-info.visible {
-            transform: translateY(0);
-        }
-
-        #debug-canvas {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            width: 160px;
-            height: 120px;
-            border: 2px solid white;
-            border-radius: 8px;
-            z-index: 1000;
-        }
-
-        .loading-screen {
+        
+        .loader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background-color: #0A0A0A;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
-            font-family: Arial, sans-serif;
-            z-index: 2000;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
         }
-
-        .progress-bar {
-            width: 200px;
-            height: 4px;
-            background: #333;
-            border-radius: 2px;
-            margin-top: 20px;
+        
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(110, 87, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #6E57FF;
+            animation: spin 1s linear infinite;
         }
-
-        .progress {
-            width: 0%;
-            height: 100%;
-            background: #00ff00;
-            border-radius: 2px;
-            transition: width 0.3s ease;
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="loading-screen" id="loading">
-        <h2>Loading AR Experience</h2>
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
+    <!-- Loading Screen -->
+    <div class="loader">
+        <div class="loader-spinner"></div>
+    </div>
+    
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="glass-effect">
+        <div class="nav-container">
+            <a href="#" class="logo">Tarun<span>.</span></a>
+            <button class="mobile-nav-toggle"><i class="fas fa-bars"></i></button>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
         </div>
-    </div>
+    </nav>
 
-    <div id="status-container">
-        <span class="status-icon"></span>
-        <span id="status-text">Initializing camera...</span>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero parallax" id="home">
+        <div class="hero-bg-gradient"></div>
+        <div class="hero-particles"></div>
+        
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-tag">Creative Developer</div>
+                <h1 class="hero-title">
+                    I bring <span class="text-gradient">imagination</span> to life through code.
+                </h1>
+                <p class="hero-description">
+                    I'm Tarun, a developer who transforms complex ideas into elegant solutions. For me, it was never just about code—it's about creating experiences that solve real problems.
+                </p>
+                
+                <div class="hero-highlights">
+                    <div class="hero-highlight-card glass-effect">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Passionate builder who thrives on challenges</span>
+                    </div>
+                    
+                    <div class="hero-highlight-card glass-effect">
+                        <i class="fas fa-vr-cardboard"></i>
+                        <span>AR/VR enthusiast pushing technology boundaries</span>
+                    </div>
+                    
+                    <div class="hero-highlight-card glass-effect">
+                        <i class="fas fa-users"></i>
+                        <span>Product-focused with strong user empathy</span>
+                    </div>
+                </div>
+                
+                <div class="cta-buttons">
+                    <a href="#projects" class="btn btn-primary"><span>See My Work</span> <i class="fas fa-arrow-right"></i></a>
+                    <a href="#contact" class="btn btn-secondary"><span>Let's Connect</span> <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="hero-image-container">
+                <div class="hero-image-wrapper">
+                    <img src="assets/me.jpg" alt="Hero Image" class="hero-image parallax-layer" data-depth="0.1">
+                    <div class="hero-image-glow"></div>
+                </div>
+                <div class="hero-tech-stack">
+                    <div class="tech-icon" data-tooltip="Python"><i class="fab fa-python"></i></div>
+                    <div class="tech-icon" data-tooltip="React"><i class="fab fa-react"></i></div>
+                    <div class="tech-icon" data-tooltip="Node.js"><i class="fab fa-node-js"></i></div>
+                    <div class="tech-icon" data-tooltip="TensorFlow"><i class="fas fa-brain"></i></div>
+                    <div class="tech-icon" data-tooltip="AWS"><i class="fab fa-aws"></i></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-circle hero-circle-1 parallax-layer" data-depth="0.2"></div>
+        <div class="hero-circle hero-circle-2 parallax-layer" data-depth="0.1"></div>
+        
+        <div class="scroll-indicator">
+            <div class="scroll-text">Scroll Down</div>
+            <div class="scroll-icon">
+                <div class="scroll-dot"></div>
+            </div>
+        </div>
+    </section>
 
-    <div id="guide-container">
-        <p id="guide-text">Please wait while we initialize the AR experience...</p>
-    </div>
+    <!-- About Section -->
+    <section class="about parallax" id="about">
+        <div class="container">
+            <div class="section-title-container">
+                <div class="section-tag">About Me</div>
+                <h2 class="section-title">My Story</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="about-intro">For me, technology is a canvas for creating impact.</p>
+                    
+                    <p>I've always been captivated by the power of code to transform ideas into reality. From leading research on tactile sensors at SJSU to building AI-driven marketing tools for clients, I find joy in crafting solutions that make a real difference.</p>
+                    
+                    <p>What drives me is more than just technical challenges—it's seeing how my work helps people accomplish their goals more effectively. Whether I'm developing recommendation systems that understand human preferences or optimizing neural networks for better performance, I approach each project with curiosity and purpose.</p>
+                    
+                    <div class="about-values">
+                        <div class="about-value">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>I'm creative and empathetic, valuing both innovation and user needs</span>
+                        </div>
+                        <div class="about-value">
+                            <i class="fas fa-code-branch"></i>
+                            <span>I embrace challenges and see them as opportunities to grow</span>
+                        </div>
+                        <div class="about-value">
+                            <i class="fas fa-users"></i>
+                            <span>I believe great products happen when technical excellence meets human understanding</span>
+                        </div>
+                    </div>
+                    
+                    <a href="#contact" class="btn btn-primary smooth-hover"><span>Let's Work Together</span> <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="about-image image-hover-effect">
+                    <img src="assets/IMG_0621.jpg" alt="About Image">
+                </div>
+            </div>
+        </div>
+        <div class="about-circle about-circle-1 parallax-layer" data-depth="0.2"></div>
+        <div class="about-circle about-circle-2 parallax-layer" data-depth="0.1"></div>
+    </section>
 
-    <div id="planet-info">
-        <h2 id="planet-name"></h2>
-        <p id="planet-description"></p>
-    </div>
+    <!-- Why Hire Me Section -->
+    <section class="why-hire-me parallax" id="why-hire-me">
+        <div class="container">
+            <div class="section-title-container">
+                <div class="section-tag">Why Hire Me</div>
+                <h2 class="section-title">What I Bring to the Table</h2>
+            </div>
+            
+            <div class="why-hire-intro">
+                <p>I combine technical expertise with a passion for creating solutions that matter. Here's how I can add value to your team:</p>
+            </div>
+            
+            <div class="why-hire-cards">
+                <div class="why-hire-card glass-effect">
+                    <div class="why-hire-icon">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3>Creative Problem Solver</h3>
+                    <p>I thrive on transforming complex challenges into elegant solutions. I see possibilities where others see obstacles and approach each project with fresh perspectives.</p>
+                    <ul class="why-hire-points">
+                        <li><i class="fas fa-check-circle"></i> Innovative thinking that breaks through conventional limitations</li>
+                        <li><i class="fas fa-check-circle"></i> Ability to visualize and execute on ambitious ideas</li>
+                    </ul>
+                </div>
+                
+                <div class="why-hire-card glass-effect">
+                    <div class="why-hire-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>Full-Stack Capabilities</h3>
+                    <p>My diverse technical skillset allows me to contribute across your entire project lifecycle. I'm comfortable diving into any part of the stack to deliver results.</p>
+                    <ul class="why-hire-points">
+                        <li><i class="fas fa-check-circle"></i> Seamless integration of front-end and back-end technologies</li>
+                        <li><i class="fas fa-check-circle"></i> Quick adaptation to new tools and frameworks</li>
+                    </ul>
+                </div>
+                
+                <div class="why-hire-card glass-effect">
+                    <div class="why-hire-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>User-Centered Approach</h3>
+                    <p>I build with empathy and purpose, focusing on creating experiences that solve real problems for real people. Your users' needs drive my decisions.</p>
+                    <ul class="why-hire-points">
+                        <li><i class="fas fa-check-circle"></i> Product mindset that balances technical and user requirements</li>
+                        <li><i class="fas fa-check-circle"></i> Commitment to accessible, intuitive interfaces</li>
+                    </ul>
+                </div>
+                
+                <div class="why-hire-card glass-effect">
+                    <div class="why-hire-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Innovation Driver</h3>
+                    <p>My passion for emerging technologies like AR/VR and machine learning keeps me at the forefront of digital innovation. I bring this forward-thinking perspective to every project.</p>
+                    <ul class="why-hire-points">
+                        <li><i class="fas fa-check-circle"></i> Experience with cutting-edge technologies that create competitive advantages</li>
+                        <li><i class="fas fa-check-circle"></i> Continuous learning mindset that embraces new possibilities</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="why-hire-cta">
+                <p>I don't just write code—I create solutions that make a difference. Let's build something extraordinary together.</p>
+                <a href="#contact" class="btn btn-primary"><span>Start the Conversation</span> <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+        <div class="why-hire-circle why-hire-circle-1 parallax-layer" data-depth="0.2"></div>
+        <div class="why-hire-circle why-hire-circle-2 parallax-layer" data-depth="0.1"></div>
+    </section>
+    <!-- Skills Section -->
+    <section class="skills parallax" id="skills">
+        <div class="container skills-container">
+            <div class="section-title-container">
+                <div class="section-tag">My Skills</div>
+                <h2 class="section-title">My Creative Toolkit</h2>
+            </div>
 
-    <canvas id="debug-canvas"></canvas>
+            <div class="skills-wrapper">
+                <div class="skills-tabs">
+                    <button class="skill-tab active" data-tab="development">Development</button>
+                    <button class="skill-tab" data-tab="design">Design</button>
+                    <button class="skill-tab" data-tab="ai">AI & ML</button>
+                    <button class="skill-tab" data-tab="cloud">Cloud & DevOps</button>
+                </div>
 
+                <div class="skills-content">
+                    <div class="skill-pane active glass-effect" id="development-pane">
+                        <div class="skill-pane-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h3>Development</h3>
+                            <p>Building robust, scalable applications across the stack</p>
+                        </div>
+                        <div class="skill-bars">
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Python</span>
+                                    <span class="percent">90%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>JavaScript/React</span>
+                                    <span class="percent">85%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>C++</span>
+                                    <span class="percent">80%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Node.js</span>
+                                    <span class="percent">85%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Java</span>
+                                    <span class="percent">75%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-pane glass-effect" id="design-pane">
+                        <div class="skill-pane-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <h3>Design</h3>
+                            <p>Creating intuitive, user-focused interfaces and experiences</p>
+                        </div>
+                        <div class="skill-bars">
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>User Experience</span>
+                                    <span class="percent">85%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Figma</span>
+                                    <span class="percent">80%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Adobe Creative Suite</span>
+                                    <span class="percent">70%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>3D Modeling</span>
+                                    <span class="percent">75%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>AR/VR Design</span>
+                                    <span class="percent">80%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-pane glass-effect" id="ai-pane">
+                        <div class="skill-pane-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3>AI & Machine Learning</h3>
+                            <p>Leveraging data and algorithms to create intelligent solutions</p>
+                        </div>
+                        <div class="skill-bars">
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>TensorFlow</span>
+                                    <span class="percent">85%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>PyTorch</span>
+                                    <span class="percent">80%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Computer Vision</span>
+                                    <span class="percent">75%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>NLP</span>
+                                    <span class="percent">70%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Reinforcement Learning</span>
+                                    <span class="percent">65%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 65%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-pane glass-effect" id="cloud-pane">
+                        <div class="skill-pane-header">
+                            <div class="skill-icon">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <h3>Cloud & DevOps</h3>
+                            <p>Deploying and scaling applications in modern infrastructure</p>
+                        </div>
+                        <div class="skill-bars">
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>AWS</span>
+                                    <span class="percent">85%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Docker</span>
+                                    <span class="percent">80%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Kubernetes</span>
+                                    <span class="percent">75%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>CI/CD</span>
+                                    <span class="percent">80%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-info">
+                                    <span>Database Management</span>
+                                    <span class="percent">85%</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="skill-progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="skills-circle skills-circle-1 parallax-layer" data-depth="0.2"></div>
+        <div class="skills-circle skills-circle-2 parallax-layer" data-depth="0.1"></div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="experience parallax" id="experience">
+        <div class="container">
+            <div class="section-title-container">
+                <div class="section-tag">My Journey</div>
+                <h2 class="section-title">Experience</h2>
+            </div>
+
+            <div class="experience-wrapper">
+                <div class="experience-card tilt-card">
+                    <div class="experience-header">
+                        <div class="experience-company-logo">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <div class="experience-info">
+                            <h3>Research Assistant</h3>
+                            <div class="experience-company">San Jose State University - TACTIC Project</div>
+                            <div class="experience-duration">May 2024 - Present</div>
+                        </div>
+                    </div>
+                    <div class="experience-body">
+                        <ul class="experience-highlights">
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Sensor Innovation</strong>
+                                    <p>Designed an automated testing platform for Velostat tactile sensors that precisely controls parameters to evaluate force range and response time.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>AI Integration</strong>
+                                    <p>Developed a machine learning model that improved force detection accuracy by 25%, addressing the inherent instability of Velostat's resistance properties.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Performance Optimization</strong>
+                                    <p>Achieved 40% latency reduction through GPU-accelerated computations and designed ASIC-based solutions for real-time applications.</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="experience-tools">
+                            <span>TensorFlow</span>
+                            <span>Python</span>
+                            <span>CUDA</span>
+                            <span>Signal Processing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="experience-card tilt-card">
+                    <div class="experience-header">
+                        <div class="experience-company-logo">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div class="experience-info">
+                            <h3>Full Stack Developer</h3>
+                            <div class="experience-company">Errund (Kenosha, WI, USA)</div>
+                            <div class="experience-duration">Jul 2021 - Feb 2023</div>
+                        </div>
+                    </div>
+                    <div class="experience-body">
+                        <ul class="experience-highlights">
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>User-Centric Recommendation System</strong>
+                                    <p>Designed and implemented an intelligent recommendation system that utilized collaborative filtering and NLP to match customers with the ideal service providers.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Architecture Optimization</strong>
+                                    <p>Enhanced platform performance by 25% through microservices restructuring, database sharding, and asynchronous processing implementation.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Enhanced User Experience</strong>
+                                    <p>Redesigned the interface using React.js and integrated AJAX for real-time updates, creating a seamless booking experience that increased user satisfaction.</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="experience-tools">
+                            <span>React</span>
+                            <span>Node.js</span>
+                            <span>MongoDB</span>
+                            <span>NLP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="experience-card tilt-card">
+                    <div class="experience-header">
+                        <div class="experience-company-logo">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="experience-info">
+                            <h3>Co-Founder</h3>
+                            <div class="experience-company">Phantasm Digital Works (India)</div>
+                            <div class="experience-duration">Feb 2021 - Jul 2023</div>
+                        </div>
+                    </div>
+                    <div class="experience-body">
+                        <ul class="experience-highlights">
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>AI-Driven Marketing Innovation</strong>
+                                    <p>Led the development of dynamic marketing tools that leveraged AI to analyze consumer behavior, increasing campaign effectiveness by 50%.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Team Leadership</strong>
+                                    <p>Scaled operations from concept to a 20-person team, managing cross-functional projects while maintaining high delivery standards.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Business Growth</strong>
+                                    <p>Implemented targeted digital campaigns that increased client revenue by 60% and established long-term strategic partnerships.</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="experience-tools">
+                            <span>Digital Marketing</span>
+                            <span>AI</span>
+                            <span>Leadership</span>
+                            <span>Business Strategy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="experience-card tilt-card">
+                    <div class="experience-header">
+                        <div class="experience-company-logo">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="experience-info">
+                            <h3>Full Stack Developer Intern</h3>
+                            <div class="experience-company">AiRTH Research PVT LTD (Noida, India)</div>
+                            <div class="experience-duration">Jan 2021 - Jul 2021</div>
+                        </div>
+                    </div>
+                    <div class="experience-body">
+                        <ul class="experience-highlights">
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Progressive Web App Development</strong>
+                                    <p>Streamlined customer service workflows by developing a PWA with React Native and APIs, improving efficiency by 40%.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Website Redesign</strong>
+                                    <p>Spearheaded the design and deployment of the company website with optimized UX/UI, increasing product orders by 60%.</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="experience-tools">
+                            <span>React Native</span>
+                            <span>REST APIs</span>
+                            <span>UI/UX</span>
+                            <span>JavaScript</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="experience-circle experience-circle-1 parallax-layer" data-depth="0.2"></div>
+        <div class="experience-circle experience-circle-2 parallax-layer" data-depth="0.1"></div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects parallax" id="projects">
+        <div class="container">
+            <div class="section-title-container">
+                <div class="section-tag">My Work</div>
+                <h2 class="section-title">Featured Projects</h2>
+            </div>
+
+            <div class="projects-wrapper">
+                <div class="project-card tilt-card">
+                    <div class="project-content">
+                        <div class="project-tag">Hackathon Winner</div>
+                        <h3 class="project-title">RecovARy</h3>
+                        <div class="project-description">
+                            <p>An AR solution using Snap AR Spectacles to assist stroke recovery patients with physiotherapy exercises. The system provides real-time feedback and generates personalized reports for healthcare providers.</p>
+                        </div>
+                        <div class="project-highlights">
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-brain"></i></div>
+                                <div class="highlight-text">AI-powered motion tracking for accurate exercise guidance</div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-chart-line"></i></div>
+                                <div class="highlight-text">Data analytics dashboard for tracking patient progress</div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-user-md"></i></div>
+                                <div class="highlight-text">Automated reporting system for doctors and therapists</div>
+                            </div>
+                        </div>
+                        <div class="project-tech">
+                            <span>AR</span>
+                            <span>Snap AR</span>
+                            <span>AI</span>
+                            <span>Healthcare</span>
+                        </div>
+                        <a href="#" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="project-card tilt-card">
+                    <div class="project-content">
+                        <div class="project-tag">Research</div>
+                        <h3 class="project-title">GPU Acceleration for Deep Neural Networks</h3>
+                        <div class="project-description">
+                            <p>A research project focused on optimizing neural network training through specialized GPU algorithms, resulting in significant reductions in computational costs and faster model convergence.</p>
+                        </div>
+                        <div class="project-highlights">
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="highlight-text">30% reduction in computational costs</div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-microchip"></i></div>
+                                <div class="highlight-text">Custom CUDA kernels for specialized operations</div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-clipboard-check"></i></div>
+                                <div class="highlight-text">Extensive profiling and validation methodology</div>
+                            </div>
+                        </div>
+                        <div class="project-tech">
+                            <span>TensorFlow</span>
+                            <span>CUDA</span>
+                            <span>Deep Learning</span>
+                            <span>Optimization</span>
+                        </div>
+                        <a href="#" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="project-card tilt-card">
+                    <div class="project-content">
+                        <div class="project-tag">IoT</div>
+                        <h3 class="project-title">Aquatic Mortality Detection System</h3>
+                        <div class="project-description">
+                            <p>An IoT-based solution that uses a network of sensors to monitor aquatic environments and provide early detection of mortality risks, helping conservationists and fish farmers protect their ecosystems.</p>
+                        </div>
+                        <div class="project-highlights">
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-water"></i></div>
+                                <div class="highlight-text">Multi-parameter water quality monitoring</div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-satellite"></i></div>
+                                <div class="highlight-text">Low-power wireless communication network</div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-bullhorn"></i></div>
+                                <div class="highlight-text">Real-time alerts and voice-activated interface</div>
+                            </div>
+                        </div>
+                        <div class="project-tech">
+                            <span>IoT</span>
+                            <span>Firebase</span>
+                            <span>Sensors</span>
+                            <span>Google Assistant</span>
+                        </div>
+                        <a href="#" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="projects-circle projects-circle-1 parallax-layer" data-depth="0.2"></div>
+        <div class="projects-circle projects-circle-2 parallax-layer" data-depth="0.1"></div>
+    </section>
+
+    <!-- Portfolio Gallery Section -->
+    <section class="portfolio-gallery-section parallax" id="gallery">
+        <div class="container">
+            <div class="gallery-section-title">
+                <h2>Interactive Portfolio</h2>
+                <p>Explore my projects in this interactive 3D gallery. Hover over each project to see it come to life, and click to learn more about the technologies and concepts behind each creation.</p>
+            </div>
+            
+            <div class="portfolio-gallery">
+                <div class="gallery-wrapper">
+                    <div class="gallery-item" data-depth="1.2" data-project="recovery">
+                        <img src="/api/placeholder/500/300" alt="RecovARy">
+                        <div class="gallery-item-content">
+                            <div class="gallery-item-category">AR Healthcare</div>
+                            <div class="gallery-item-title">RecovARy</div>
+                            <div class="gallery-item-desc">AR solution for stroke recovery patients with real-time feedback and personalized reports for healthcare providers.</div>
+                            <a href="#" class="gallery-item-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-depth="0.8" data-project="gpu-acceleration">
+                        <img src="/api/placeholder/500/300" alt="GPU Acceleration">
+                        <div class="gallery-item-content">
+                            <div class="gallery-item-category">AI Research</div>
+                            <div class="gallery-item-title">GPU Acceleration for Neural Networks</div>
+                            <div class="gallery-item-desc">Optimizing neural network training through specialized GPU algorithms for faster convergence and reduced costs.</div>
+                            <a href="#" class="gallery-item-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-depth="1.5" data-project="aquatic-monitoring">
+                        <img src="/api/placeholder/500/300" alt="Aquatic Monitoring">
+                        <div class="gallery-item-content">
+                            <div class="gallery-item-category">IoT Solutions</div>
+                            <div class="gallery-item-title">Aquatic Mortality Detection</div>
+                            <div class="gallery-item-desc">IoT-based solution for monitoring aquatic environments with early detection systems and real-time alerts.</div>
+                            <a href="#" class="gallery-item-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-depth="1.0" data-project="vr-experience">
+                        <img src="/api/placeholder/500/300" alt="VR Experience">
+                        <div class="gallery-item-content">
+                            <div class="gallery-item-category">VR Development</div>
+                            <div class="gallery-item-title">Immersive VR Experience</div>
+                            <div class="gallery-item-desc">Creating interactive virtual environments for educational and training purposes with realistic simulations.</div>
+                            <a href="#" class="gallery-item-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-depth="1.3" data-project="ai-assistant">
+                        <img src="/api/placeholder/500/300" alt="AI Assistant">
+                        <div class="gallery-item-content">
+                            <div class="gallery-item-category">Natural Language Processing</div>
+                            <div class="gallery-item-title">Context-Aware AI Assistant</div>
+                            <div class="gallery-item-desc">An AI assistant that learns from user interactions and adapts to provide personalized responses based on context.</div>
+                            <a href="#" class="gallery-item-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-depth="0.9" data-project="blockchain">
+                        <img src="/api/placeholder/500/300" alt="Blockchain">
+                        <div class="gallery-item-content">
+                            <div class="gallery-item-category">Blockchain</div>
+                            <div class="gallery-item-title">Decentralized Identity Solution</div>
+                            <div class="gallery-item-desc">A blockchain-based identity verification system that enhances security while giving users control over their data.</div>
+                            <a href="#" class="gallery-item-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-circle gallery-circle-1 parallax-layer" data-depth="0.2"></div>
+        <div class="gallery-circle gallery-circle-2 parallax-layer" data-depth="0.1"></div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact parallax" id="contact">
+        <div class="container contact-container">
+            <div class="section-title-container">
+                <div class="section-tag">Get In Touch</div>
+                <h2 class="section-title">Let's Build Something Amazing Together</h2>
+            </div>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Ready to start a conversation?</h3>
+                    <p>I'm always open to discussing new projects, creative ideas or opportunities to be part of your vision. Feel free to reach out through any of the following methods.</p>
+                    
+                    <ul class="contact-links">
+                        <li>
+                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                            <div class="contact-info-text">
+                                <strong>Email</strong>
+                                tarunsanjeev.banala@sjsu.edu
+                            </div>
+                        </li>
+                        <li>
+                            <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                            <div class="contact-info-text">
+                                <strong>Phone</strong>
+                                408-646-5083
+                            </div>
+                        </li>
+                        <li>
+                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="contact-info-text">
+                                <strong>Location</strong>
+                                San Jose, CA
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <div class="social-links">
+                        <a href="https://github.com/btsanjeev" class="social-link" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="https://linkedin.com/in/tarunsanjeevb" class="social-link" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="connect-container glass-effect tilt-card">
+                    <h3>Let's Connect</h3>
+                    <p>Whether you have a project in mind or just want to chat about tech, I'd love to hear from you.</p>
+                    
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" placeholder="Your Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="Your Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" rows="5" placeholder="Your Message"></textarea>
+                        </div>
+                        <button type="submit" class="connect-button">
+                            <span>Send Message</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="contact-circle contact-circle-1 parallax-layer" data-depth="0.2"></div>
+        <div class="contact-circle contact-circle-2 parallax-layer" data-depth="0.1"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-logo">Tarun<span>.</span></div>
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://github.com/btsanjeev" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/tarunsanjeevb" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-text">
+                I'm passionate about creating impactful digital solutions. Let's collaborate and bring your ideas to life!
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Tarun Sanjeev Banala. All rights reserved.
+            </div>
+        </div>
+        <div class="footer-circle footer-circle-1 parallax-layer" data-depth="0.1"></div>
+        <div class="footer-circle footer-circle-2 parallax-layer" data-depth="0.2"></div>
+    </footer>
+    
+    <!-- GSAP and ScrollTrigger for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="scripts/script.js"></script>
+    <script src="scripts/advanced-effects.js"></script>
+    
     <script>
-        let camera, scene, renderer, planets;
-        let surfaceFound = false;
-        let planetsPlaced = false;
-
-        const statusIcon = document.querySelector('.status-icon');
-        const statusText = document.getElementById('status-text');
-        const guideText = document.getElementById('guide-text');
-        const planetInfo = document.getElementById('planet-info');
-        const loadingScreen = document.getElementById('loading');
-        const progress = document.getElementById('progress');
-
-        // Planet data
-        const planetData = {
-            mars: {
-                name: "Mars",
-                color: 0xff4444,
-                radius: 0.2,
-                position: [-0.5, 0, -1],
-                description: "Mars is the fourth planet from the Sun. Known as the Red Planet, it has a thin atmosphere and features the largest volcano in the Solar System."
-            },
-            earth: {
-                name: "Earth",
-                color: 0x4444ff,
-                radius: 0.25,
-                position: [0, 0, -1],
-                description: "Earth is our home planet, the only known planet to support life. It has one natural satellite, the Moon, and is the third planet from the Sun."
-            },
-            venus: {
-                name: "Venus",
-                color: 0xffaa44,
-                radius: 0.22,
-                position: [0.5, 0, -1],
-                description: "Venus is the second planet from the Sun. It's the hottest planet in our solar system due to its thick atmosphere of carbon dioxide."
+        // Inline script to handle page loading
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+            const loader = document.querySelector('.loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                }, 500);
             }
-        };
-
-        // Initialize OpenCV
-        function onOpenCvReady() {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-                .then(stream => {
-                    const video = document.createElement('video');
-                    video.srcObject = stream;
-                    video.play();
-
-                    initThreeJS();
-                    detectSurface(video);
-                })
-                .catch(err => {
-                    console.error('Camera access denied:', err);
-                    statusText.textContent = 'Camera access denied';
-                });
-        }
-
-        // Surface detection using OpenCV
-        function detectSurface(video) {
-            const canvas = document.getElementById('debug-canvas');
-            const ctx = canvas.getContext('2d');
-            const cap = new cv.VideoCapture(video);
-            const src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
-            const dst = new cv.Mat();
-
-            function processVideo() {
-                cap.read(src);
-                cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);
-                cv.GaussianBlur(dst, dst, new cv.Size(5, 5), 0, 0);
-                cv.Canny(dst, dst, 50, 150, 3);
-
-                // Check for horizontal lines (potential surfaces)
-                const lines = new cv.Mat();
-                cv.HoughLines(dst, lines, 1, Math.PI / 180, 100);
-
-                if (lines.rows > 0 && !surfaceFound) {
-                    surfaceFound = true;
-                    statusIcon.classList.add('active');
-                    statusText.textContent = 'Surface detected';
-                    guideText.textContent = 'Surface found! Move around to see the planets. Click on them for more information.';
-                    placePlanets();
-                }
-
-                cv.imshow(canvas, dst);
-                requestAnimationFrame(processVideo);
-            }
-
-            processVideo();
-        }
-
-        // Three.js initialization
-        function initThreeJS() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(0, 10, 5);
-            scene.add(directionalLight);
-
-            animate();
-            updateLoadingProgress(50);
-        }
-
-        function placePlanets() {
-            planets = [];
-            Object.entries(planetData).forEach(([key, data]) => {
-                const geometry = new THREE.SphereGeometry(data.radius, 32, 32);
-                const material = new THREE.MeshStandardMaterial({
-                    color: data.color,
-                    metalness: 0.3,
-                    roughness: 0.7,
-                });
-                const planet = new THREE.Mesh(geometry, material);
-                planet.position.set(...data.position);
-                planet.userData = data;
-                scene.add(planet);
-                planets.push(planet);
-
-                // Add atmosphere
-                const atmosphereGeo = new THREE.SphereGeometry(data.radius * 1.1, 32, 32);
-                const atmosphereMat = new THREE.MeshPhongMaterial({
-                    color: data.color,
-                    transparent: true,
-                    opacity: 0.2,
-                    side: THREE.BackSide
-                });
-                const atmosphere = new THREE.Mesh(atmosphereGeo, atmosphereMat);
-                planet.add(atmosphere);
-            });
-
-            planetsPlaced = true;
-            updateLoadingProgress(100);
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 1000);
-        }
-
-        function updateLoadingProgress(value) {
-            progress.style.width = `${value}%`;
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if (planets) {
-                planets.forEach(planet => {
-                    planet.rotation.y += 0.01;
-                });
-            }
-            renderer.render(scene, camera);
-        }
-
-        // Handle clicks/touches
-        function onTouch(event) {
-            if (!planetsPlaced) return;
-
-            const raycaster = new THREE.Raycaster();
-            const touch = new THREE.Vector2();
-            
-            touch.x = (event.clientX / window.innerWidth) * 2 - 1;
-            touch.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            raycaster.setFromCamera(touch, camera);
-            const intersects = raycaster.intersectObjects(planets);
-
-            if (intersects.length > 0) {
-                const planet = intersects[0].object;
-                showPlanetInfo(planet.userData);
-            }
-        }
-
-        function showPlanetInfo(planetData) {
-            const planetNameEl = document.getElementById('planet-name');
-            const planetDescEl = document.getElementById('planet-description');
-            
-            planetNameEl.textContent = planetData.name;
-            planetDescEl.textContent = planetData.description;
-            planetInfo.classList.add('visible');
-
-            setTimeout(() => {
-                planetInfo.classList.remove('visible');
-            }, 5000);
-        }
-
-        window.addEventListener('click', onTouch);
-        window.addEventListener('touchstart', (e) => onTouch(e.touches[0]));
-
-        // Start the experience
-        updateLoadingProgress(25);
-        if (cv) {
-            onOpenCvReady();
-        } else {
-            cv.onRuntimeInitialized = onOpenCvReady;
-        }
+        });
     </script>
 </body>
 </html>
