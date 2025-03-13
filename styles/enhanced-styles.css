@@ -1,0 +1,602 @@
+/* === ENHANCED HERO SECTION STYLES === */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 120px 0 80px;
+}
+
+.hero-bg-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 70% 30%, rgba(110, 87, 255, 0.1), transparent 60%);
+    z-index: -1;
+}
+
+.hero-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%236E57FF' stroke-width='1'%3E%3Ccircle cx='400' cy='400' r='250'/%3E%3Ccircle cx='400' cy='400' r='125'/%3E%3Ccircle cx='400' cy='400' r='375'/%3E%3Ccircle cx='400' cy='400' r='50'/%3E%3C/g%3E%3C/svg%3E");
+    animation: rotate 120s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hero-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    max-width: 650px;
+}
+
+.hero-tag {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    background-color: rgba(110, 87, 255, 0.1);
+    color: var(--primary);
+    border-radius: 50px;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(110, 87, 255, 0.3);
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.2s;
+}
+
+.hero-title {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    transform: translateY(30px);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.4s;
+}
+
+.hero-title .text-gradient {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    position: relative;
+}
+
+.hero-title .text-gradient::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 8px;
+    background-color: rgba(110, 87, 255, 0.2);
+    bottom: 10px;
+    left: 0;
+    z-index: -1;
+    border-radius: 4px;
+}
+
+.hero-description {
+    font-size: 1.3rem;
+    color: var(--gray);
+    margin-bottom: 3rem;
+    max-width: 600px;
+    line-height: 1.6;
+    transform: translateY(30px);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.6s;
+}
+
+.hero-about {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    transform: translateY(30px);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.8s;
+}
+
+.hero-about-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.hero-about-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-color: rgba(110, 87, 255, 0.3);
+}
+
+.hero-about-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(110, 87, 255, 0.1), rgba(255, 65, 108, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-size: 1.3rem;
+    border: 1px solid rgba(110, 87, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.hero-about-card:hover .hero-about-icon {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: rotate(5deg) scale(1.1);
+}
+
+.hero-about-text h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--light);
+}
+
+.hero-about-text p {
+    font-size: 0.95rem;
+    color: var(--gray);
+    line-height: 1.5;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1.5rem;
+    transform: translateY(30px);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 1s;
+}
+
+.hero-image-container {
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.2s;
+}
+
+.hero-image-wrapper {
+    position: relative;
+    z-index: 2;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
+    transition: all 0.5s ease;
+}
+
+.hero-image-wrapper:hover {
+    transform: perspective(1000px) rotateY(0) rotateX(0);
+}
+
+.hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.hero-image-wrapper:hover .hero-image {
+    transform: scale(1.05);
+}
+
+.hero-image-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(110, 87, 255, 0.2), transparent 70%);
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.hero-image-wrapper:hover .hero-image-glow {
+    opacity: 1;
+}
+
+.hero-tech-stack {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+.tech-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+.tech-icon:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-10px);
+}
+
+.tech-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--card-bg);
+    color: var(--light);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tech-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+    bottom: -30px;
+}
+
+.hero-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    opacity: 0.03;
+    filter: blur(50px);
+}
+
+.hero-circle-1 {
+    width: 500px;
+    height: 500px;
+    top: -10%;
+    right: -10%;
+}
+
+.hero-circle-2 {
+    width: 600px;
+    height: 600px;
+    bottom: -20%;
+    left: -10%;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.4s;
+}
+
+.scroll-text {
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.scroll-icon {
+    width: 30px;
+    height: 50px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.scroll-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    animation: scrollAnimation 2s infinite;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+    .hero-title {
+        font-size: 4rem;
+    }
+    
+    .hero-about {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .hero-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .hero-content {
+        max-width: 100%;
+        text-align: center;
+    }
+    
+    .hero-description {
+        margin: 0 auto 3rem;
+    }
+    
+    .hero-about {
+        max-width: 600px;
+        margin: 0 auto 3rem;
+    }
+    
+    .cta-buttons {
+        justify-content: center;
+    }
+    
+    .hero-image-container {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .hero-description {
+        font-size: 1.1rem;
+    }
+    
+    .hero-about {
+        grid-template-columns: 1fr;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .hero-image-container {
+        display: none;
+    }
+}
+
+/* === SKILLS SECTION FIXES === */
+.skills {
+    padding: 10rem 0;
+    background-color: var(--darker);
+    position: relative;
+    overflow: hidden;
+}
+
+.skills-container {
+    position: relative;
+    z-index: 2;
+}
+
+.skills-wrapper {
+    margin-top: 3rem;
+}
+
+.skills-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.skill-tab {
+    padding: 0.8rem 2rem;
+    background-color: var(--card-bg);
+    color: var(--gray);
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.skill-tab.active, .skill-tab:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(110, 87, 255, 0.2);
+}
+
+/* THIS IS THE CRITICAL FIX */
+.skills-content {
+    position: relative;
+    min-height: 500px; /* Increased from 400px */
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.skill-pane {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    padding: 3rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    height: auto; /* Allow height to adjust based on content */
+    position: absolute;
+    display: none;
+}
+
+.skill-pane.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    display: block;
+    position: relative;
+}
+
+.skill-pane-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.skill-icon {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(110, 87, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: var(--primary);
+    font-size: 2rem;
+    border: 1px solid rgba(110, 87, 255, 0.3);
+}
+
+.skill-pane-header h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--light);
+}
+
+.skill-pane-header p {
+    color: var(--gray);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.skill-bars {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.skill-bar {
+    margin-bottom: 2rem;
+}
+
+.skill-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    color: var(--light);
+    font-weight: 500;
+}
+
+.percent {
+    color: var(--primary);
+}
+
+.skill-progress {
+    width: 100%;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.skill-progress-bar {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0;
+    transition: width 1.5s ease;
+}
+
+/* Fix for animated skill bars */
+.skill-progress-bar {
+    position: relative;
+    overflow: hidden;
+}
+
+.skill-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
+    transform: translateX(-100%);
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .skills-content {
+        min-height: 600px;
+    }
+    
+    .skill-pane {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .skills-content {
+        min-height: 700px;
+    }
+    
+    .skills-tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+        max-width: 300px;
+        margin: 0 auto 2rem;
+    }
+}

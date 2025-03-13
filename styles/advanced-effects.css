@@ -1,0 +1,1156 @@
+/* Particle and Additional Styling */
+
+/* Particles for Hero Section */
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background-color: var(--primary);
+    box-shadow: 0 0 10px rgba(110, 87, 255, 0.5);
+    pointer-events: none;
+}
+
+/* Add subtle animation to elements */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Text gradient effect */
+.text-gradient {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    position: relative;
+}
+
+/* Glass effect for cards */
+.glass-effect {
+    background-color: rgba(18, 18, 18, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Additional utility classes */
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+.mb-5 { margin-bottom: 2.5rem; }
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+.mt-5 { margin-top: 2.5rem; }
+
+.py-1 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-2 { padding-top: 1rem; padding-bottom: 1rem; }
+.py-3 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+.py-4 { padding-top: 2rem; padding-bottom: 2rem; }
+.py-5 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+
+.px-1 { padding-left: 0.5rem; padding-right: 0.5rem; }
+.px-2 { padding-left: 1rem; padding-right: 1rem; }
+.px-3 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.px-4 { padding-left: 2rem; padding-right: 2rem; }
+.px-5 { padding-left: 2.5rem; padding-right: 2.5rem; }
+
+/* Enhanced section transitions */
+section {
+    position: relative;
+    transition: opacity 0.5s ease;
+}
+
+section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, var(--dark), transparent);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.7;
+}
+
+section.darker::after {
+    background: linear-gradient(to top, var(--darker), transparent);
+}
+
+/* Enhancing overall scrolling experience */
+html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--darker);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--darker);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 6px;
+    border: 2px solid var(--darker);
+}
+
+/* Card hover effect */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Glow effect */
+.glow-on-hover {
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-on-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(110, 87, 255, 0.5), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.glow-on-hover:hover::after {
+    opacity: 0.2;
+}
+
+/* Text reveal animation */
+.reveal-text {
+    position: relative;
+    overflow: hidden;
+    display: block;
+}
+
+.reveal-text span {
+    display: inline-block;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.reveal-text.revealed span {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Enhanced buttons */
+.btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+    z-index: -1;
+}
+
+.btn:hover::after {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
+/* Hero section specific enhancements */
+.hero-container {
+    position: relative;
+}
+
+.hero-container::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--primary);
+    border-radius: 15px;
+    opacity: 0.2;
+    animation: rotate 20s linear infinite;
+}
+
+.hero-container::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--secondary);
+    border-radius: 50%;
+    opacity: 0.2;
+    animation: float 8s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Enhanced section titles */
+.section-title-container {
+    position: relative;
+}
+
+.section-title-container::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--primary);
+    border-radius: 10px;
+    opacity: 0.2;
+    animation: rotate 15s linear infinite reverse;
+}
+
+.section-title-container::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--secondary);
+    border-radius: 50%;
+    opacity: 0.2;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Fixed Contact Section Styles */
+.contact {
+    padding: 10rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-container {
+    position: relative;
+    z-index: 2;
+}
+
+.contact .section-title-container {
+    text-align: center;
+    margin-bottom: 4rem;
+    display: block;
+    width: 100%;
+}
+
+.contact .section-title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.contact-info h3 {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.contact-info p {
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    color: var(--gray);
+    font-size: 1.1rem;
+}
+
+.contact-links {
+    list-style: none;
+}
+
+.contact-links li {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.contact-links li:hover {
+    transform: translateX(10px);
+}
+
+.contact-icon {
+    width: 60px;
+    height: 60px;
+    background-color: var(--card-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.5rem;
+    color: var(--primary);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.contact-links li:hover .contact-icon {
+    background-color: var(--primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+.contact-info-text {
+    color: var(--gray);
+}
+
+.contact-info-text strong {
+    display: block;
+    color: var(--light);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.social-link {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.social-link:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-10px) scale(1.1);
+}
+
+.connect-container {
+    background-color: var(--card-bg);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.5s ease;
+}
+
+.connect-container:hover {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    transform: translateY(-10px);
+    border-color: rgba(110, 87, 255, 0.2);
+}
+
+.connect-container h3 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--light);
+    text-align: center;
+}
+
+.connect-container p {
+    color: var(--gray);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: var(--gray);
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: var(--light);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(110, 87, 255, 0.2);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.connect-button {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    box-shadow: 0 10px 20px rgba(110, 87, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.connect-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+}
+
+.connect-button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 80%);
+    transform: rotate(45deg);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.connect-button:hover {
+    background-color: var(--secondary);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(110, 87, 255, 0.4);
+}
+
+.connect-button:hover::before {
+    opacity: 1;
+}
+
+.connect-button span {
+    position: relative;
+    z-index: 1;
+}
+
+.contact-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    opacity: 0.03;
+    filter: blur(50px);
+    z-index: -1;
+}
+
+.contact-circle-1 {
+    width: 500px;
+    height: 500px;
+    top: 10%;
+    right: -10%;
+}
+
+.contact-circle-2 {
+    width: 400px;
+    height: 400px;
+    bottom: 10%;
+    left: -5%;
+}
+
+@media (max-width: 992px) {
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .contact-info {
+        text-align: center;
+    }
+    
+    .contact-links li {
+        justify-content: center;
+    }
+    
+    .social-links {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .connect-container {
+        padding: 2rem;
+    }
+}
+
+
+/* Why Hire Me Section Styles */
+.why-hire-me {
+    padding: 10rem 0;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--darker);
+}
+
+.why-hire-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.why-hire-card {
+    background-color: rgba(18, 18, 18, 0.7);
+    border-radius: 20px;
+    padding: 2.5rem;
+    transition: all 0.4s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeInUp 0.8s forwards;
+    animation-delay: calc(var(--card-index, 0) * 0.2s);
+}
+
+.why-hire-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    border-color: rgba(110, 87, 255, 0.2);
+}
+
+.why-hire-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, rgba(110, 87, 255, 0.1), rgba(255, 65, 108, 0.1));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    font-size: 1.8rem;
+    border: 1px solid rgba(110, 87, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.why-hire-card:hover .why-hire-icon {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    transform: rotate(5deg) scale(1.1);
+}
+
+.why-hire-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--light);
+}
+
+.why-hire-card p {
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+.why-hire-points {
+    list-style: none;
+    margin-top: auto;
+}
+
+.why-hire-points li {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.8rem;
+    color: var(--light);
+}
+
+.why-hire-points li i {
+    color: var(--primary);
+    margin-right: 0.8rem;
+    font-size: 0.9rem;
+}
+
+.why-hire-cta {
+    margin-top: 4rem;
+    text-align: center;
+    padding: 3rem;
+    background: linear-gradient(135deg, rgba(110, 87, 255, 0.05), rgba(255, 65, 108, 0.05));
+    border-radius: 20px;
+    border: 1px solid rgba(110, 87, 255, 0.1);
+    animation: fadeInUp 0.8s forwards;
+    animation-delay: 0.8s;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.why-hire-cta p {
+    font-size: 1.3rem;
+    color: var(--light);
+    margin-bottom: 1.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.why-hire-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    opacity: 0.03;
+    filter: blur(50px);
+    z-index: 0;
+}
+
+.why-hire-circle-1 {
+    width: 500px;
+    height: 500px;
+    top: 10%;
+    right: -10%;
+}
+
+.why-hire-circle-2 {
+    width: 400px;
+    height: 400px;
+    bottom: 10%;
+    left: -5%;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+    .why-hire-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .why-hire-card {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .why-hire-me {
+        padding: 6rem 0;
+    }
+    
+    .why-hire-cta {
+        padding: 2rem;
+    }
+    
+    .why-hire-cta p {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .why-hire-card {
+        padding: 1.5rem;
+    }
+}
+
+
+/* Mobile Optimizations and Responsive Improvements */
+
+/* Global improvements */
+html {
+    -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+}
+
+body {
+    overflow-x: hidden;
+    touch-action: manipulation; /* Improves touch responsiveness */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+}
+
+/* Touch target size improvements */
+button, 
+.btn, 
+.nav-links a, 
+.skill-tab,
+.social-link,
+.tech-icon,
+.form-group input,
+.form-group textarea {
+    min-height: 44px; /* Minimum touch target size */
+}
+
+/* Remove custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .cursor, 
+    .cursor-follower {
+        display: none !important;
+    }
+    
+    body {
+        cursor: auto !important;
+    }
+}
+
+/* Improved mobile navigation */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 1rem;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .nav-links {
+        background-color: rgba(10, 10, 10, 0.98);
+        padding: 1.5rem;
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        opacity: 1;
+        visibility: visible;
+        z-index: 1000;
+    }
+    
+    .nav-links.active {
+        transform: translateX(0);
+    }
+    
+    .nav-links li {
+        margin: 1.2rem 0;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .nav-links a {
+        display: block;
+        padding: 0.8rem;
+        font-size: 1.2rem;
+    }
+    
+    .mobile-nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        background-color: rgba(110, 87, 255, 0.1);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .mobile-nav-toggle:hover {
+        background-color: rgba(110, 87, 255, 0.2);
+    }
+}
+
+/* Hero section mobile improvements */
+@media (max-width: 768px) {
+    .hero {
+        padding: 100px 0 60px;
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2.8rem;
+        line-height: 1.2;
+    }
+    
+    .hero-description {
+        font-size: 1.1rem;
+    }
+    
+    .hero-about {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .hero-about-card {
+        padding: 1.5rem;
+    }
+    
+    .hero-image-container {
+        margin-top: 2rem;
+    }
+    
+    .hero-tech-stack {
+        margin-top: 1.5rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+    
+    .btn {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+/* Skills section mobile improvements */
+@media (max-width: 768px) {
+    .skills {
+        padding: 5rem 0;
+    }
+    
+    .skills-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        gap: 0.5rem;
+    }
+    
+    .skill-tab {
+        flex: 0 0 auto;
+        scroll-snap-align: center;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .skill-pane {
+        padding: 1.5rem;
+    }
+    
+    .skill-pane-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .skill-pane-header h3 {
+        font-size: 1.5rem;
+    }
+    
+    .skill-info {
+        font-size: 0.9rem;
+    }
+}
+
+/* Experience and Projects section mobile improvements */
+@media (max-width: 768px) {
+    .experience, 
+    .projects,
+    .why-hire-me {
+        padding: 5rem 0;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+    }
+    
+    .section-tag {
+        font-size: 0.8rem;
+    }
+    
+    .experience-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .experience-company-logo {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+    }
+    
+    .experience-info h3 {
+        font-size: 1.5rem;
+    }
+    
+    .experience-company {
+        font-size: 1rem;
+    }
+    
+    .experience-highlights li {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .experience-highlights li i {
+        margin-bottom: 0.5rem;
+    }
+    
+    .project-content {
+        padding: 1.5rem;
+    }
+    
+    .project-title {
+        font-size: 1.8rem;
+    }
+    
+    .project-description {
+        font-size: 1rem;
+    }
+    
+    .project-highlights {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Portfolio gallery mobile improvements */
+@media (max-width: 768px) {
+    .portfolio-gallery-section {
+        padding: 5rem 0;
+    }
+    
+    .gallery-section-title h2 {
+        font-size: 2.5rem;
+    }
+    
+    .gallery-section-title p {
+        font-size: 1rem;
+    }
+    
+    .gallery-wrapper {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .gallery-item {
+        height: auto;
+        min-height: 400px;
+    }
+    
+    .gallery-item-title {
+        font-size: 1.2rem;
+    }
+    
+    .gallery-item-desc {
+        font-size: 0.9rem;
+    }
+}
+
+/* Contact section mobile improvements */
+@media (max-width: 768px) {
+    .contact {
+        padding: 5rem 0;
+    }
+    
+    .connect-container {
+        padding: 1.5rem;
+    }
+    
+    .connect-container h3 {
+        font-size: 1.8rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        font-size: 16px; /* Prevents zoom on input focus on iOS */
+    }
+    
+    .connect-button {
+        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
+    }
+    
+    .contact-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .contact-info-text strong {
+        font-size: 1rem;
+    }
+    
+    .social-links {
+        gap: 1rem;
+    }
+    
+    .social-link {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Footer mobile improvements */
+@media (max-width: 768px) {
+    .footer-links {
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+    }
+    
+    .footer-social {
+        margin-bottom: 2rem;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    /* Increase spacing between interactive elements */
+    .nav-links li,
+    .skill-tab,
+    .social-link,
+    .gallery-item-link,
+    .project-link,
+    .footer-links a {
+        padding: 0.8rem;
+        margin: 0.2rem;
+    }
+    
+    /* Disable complex hover effects that don't work well on touch */
+    .hero-about-card:hover,
+    .experience-card:hover,
+    .project-card:hover,
+    .gallery-item:hover,
+    .social-link:hover,
+    .tech-icon:hover,
+    .skill-tab:hover:not(.active) {
+        transform: none;
+    }
+    
+    /* Add active/touch state for buttons */
+    .btn:active,
+    .connect-button:active,
+    .gallery-item:active,
+    .project-card:active,
+    .experience-card:active {
+        transform: scale(0.98);
+        transition: transform 0.2s;
+    }
+}
+
+/* Additional optimizations for smaller phones */
+@media (max-width: 375px) {
+    .section-title {
+        font-size: 2.2rem;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-about-card,
+    .project-content,
+    .experience-body,
+    .connect-container {
+        padding: 1.2rem;
+    }
+    
+    .gallery-item {
+        min-height: 350px;
+    }
+}
+
+/* Performance optimizations for all devices */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .skill-progress-bar,
+    .project-card,
+    .experience-card,
+    .gallery-item,
+    .why-hire-card {
+        transition: none !important;
+    }
+}

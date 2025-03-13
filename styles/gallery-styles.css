@@ -1,0 +1,211 @@
+/* Portfolio Gallery Styles */
+.portfolio-gallery-section {
+    padding: 10rem 0;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--darker);
+}
+
+.gallery-section-title {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.gallery-section-title h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+.gallery-section-title p {
+    color: var(--gray);
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.portfolio-gallery {
+    position: relative;
+    width: 100%;
+    height: auto;
+    perspective: 1000px;
+    perspective-origin: center center;
+    margin: 4rem 0;
+    min-height: 650px; /* Set a minimum height to ensure visibility */
+}
+
+.gallery-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.gallery-item {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transform-style: preserve-3d;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* Fixed height to ensure consistency */
+    height: 450px;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.gallery-item-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.gallery-item-category {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background-color: rgba(110, 87, 255, 0.1);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin-bottom: 0.8rem;
+    border: 1px solid rgba(110, 87, 255, 0.2);
+}
+
+.gallery-item-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: var(--light);
+}
+
+.gallery-item-desc {
+    font-size: 0.95rem;
+    color: var(--gray);
+    line-height: 1.5;
+    flex-grow: 1;
+    margin-bottom: 1rem;
+}
+
+.gallery-item-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: auto;
+}
+
+.gallery-item-link i {
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item-link:hover {
+    color: var(--secondary);
+}
+
+.gallery-item-link:hover i {
+    transform: translateX(5px);
+}
+
+.gallery-item.active {
+    box-shadow: 0 25px 50px rgba(110, 87, 255, 0.3);
+    border-color: rgba(110, 87, 255, 0.3);
+    z-index: 2;
+    transform: scale(1.05) translateZ(30px);
+}
+
+.gallery-item.dimmed {
+    opacity: 0.5;
+    filter: blur(2px);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.gallery-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(110, 87, 255, 0.1), rgba(255, 65, 108, 0.1));
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.gallery-item:hover::before {
+    opacity: 1;
+}
+
+.gallery-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    opacity: 0.03;
+    filter: blur(50px);
+    z-index: 0;
+}
+
+.gallery-circle-1 {
+    width: 600px;
+    height: 600px;
+    top: -10%;
+    right: -10%;
+}
+
+.gallery-circle-2 {
+    width: 500px;
+    height: 500px;
+    bottom: -20%;
+    left: -10%;
+}
+
+@media (max-width: 1200px) {
+    .gallery-wrapper {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .portfolio-gallery {
+        min-height: 1300px;
+    }
+    .gallery-wrapper {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .portfolio-gallery {
+        min-height: 2600px;
+    }
+    .gallery-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .gallery-item {
+        height: 400px;
+    }
+}

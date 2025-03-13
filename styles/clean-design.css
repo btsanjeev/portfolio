@@ -1,0 +1,364 @@
+/* Clean Design Updates - Reduces visual clutter and creates a more focused experience */
+
+/* Global design cleanup */
+:root {
+    --primary: #6E57FF;
+    --secondary: #FF416C;
+    --dark: #0A0A0A;
+    --darker: #050505;
+    --light: #F5F5F7;
+    --gray: #8B8B8B;
+    --card-bg: #121212;
+    --card-hover: #1A1A1A;
+    
+    /* New variables for consistent spacing */
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 2rem;
+    --space-lg: 3rem;
+    --space-xl: 5rem;
+    
+    /* Typography scale */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-md: 1.125rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.5rem;
+    --text-2xl: 1.875rem;
+    --text-3xl: 2.25rem;
+    --text-4xl: 3rem;
+    --text-5xl: 3.75rem;
+}
+
+body {
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduce unnecessary animations and effects */
+.container, section, div {
+    transition: none;
+}
+
+section {
+    padding: var(--space-xl) 0;
+}
+
+/* Focus essential animations only */
+.btn, .project-card, .experience-card, .why-hire-card, .gallery-item, 
+.social-link, .nav-links a {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+/* Cleaner typography */
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+p {
+    margin-bottom: var(--space-md);
+}
+
+/* Simplified Hero Section */
+.hero {
+    min-height: 90vh; /* Shorter than before */
+}
+
+.hero-title {
+    font-size: var(--text-5xl);
+    max-width: 700px; /* Control line length */
+}
+
+.hero-description {
+    font-size: var(--text-xl);
+    max-width: 600px; /* Control line length */
+    margin-bottom: var(--space-lg);
+}
+
+/* New highlight cards for hero */
+.hero-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.hero-highlight-card {
+    display: flex;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 12px;
+    background-color: rgba(18, 18, 18, 0.6);
+}
+
+.hero-highlight-card i {
+    color: var(--primary);
+    font-size: var(--text-lg);
+    margin-right: var(--space-sm);
+}
+
+.hero-highlight-card span {
+    color: var(--light);
+    font-weight: 500;
+}
+
+/* Cleaner About Section */
+.about-intro {
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: var(--space-md);
+}
+
+.about-text p {
+    font-size: var(--text-md);
+    margin-bottom: var(--space-md);
+}
+
+.about-values {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.about-value {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+}
+
+.about-value i {
+    color: var(--primary);
+    font-size: var(--text-md);
+    margin-top: 5px;
+}
+
+.about-value span {
+    color: var(--light);
+}
+
+/* Updated Why Hire Me Section */
+.why-hire-intro {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto var(--space-lg);
+}
+
+.why-hire-intro p {
+    font-size: var(--text-xl);
+    color: var(--light);
+}
+
+.why-hire-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+}
+
+.why-hire-card {
+    padding: var(--space-lg);
+    border-radius: 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.why-hire-card h3 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-sm);
+}
+
+.why-hire-card p {
+    color: var(--gray);
+    margin-bottom: var(--space-md);
+}
+
+.why-hire-points {
+    margin-top: auto;
+}
+
+.why-hire-points li {
+    margin-bottom: var(--space-sm);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-xs);
+}
+
+.why-hire-points li i {
+    color: var(--primary);
+    font-size: var(--text-sm);
+    margin-top: 5px;
+}
+
+.why-hire-cta {
+    margin-top: var(--space-lg);
+    text-align: center;
+    padding: var(--space-lg);
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(110, 87, 255, 0.05), rgba(255, 65, 108, 0.05));
+}
+
+.why-hire-cta p {
+    font-size: var(--text-xl);
+    max-width: 700px;
+    margin: 0 auto var(--space-md);
+}
+
+/* Simplified buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn i {
+    margin-left: var(--space-xs);
+    transition: transform 0.3s ease;
+}
+
+.btn:hover i {
+    transform: translateX(5px);
+}
+
+/* Simplified navigation */
+.nav-container {
+    padding: 1rem 2rem;
+}
+
+/* Cleaner Skill Section */
+.skills-tabs {
+    background-color: rgba(18, 18, 18, 0.6);
+    padding: var(--space-xs);
+    border-radius: 50px;
+    display: inline-flex;
+    margin-bottom: var(--space-lg);
+}
+
+.skill-tab {
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+}
+
+.skill-tab.active {
+    background-color: var(--primary);
+}
+
+/* Cleaner Experience Cards */
+.experience-card {
+    background-color: rgba(18, 18, 18, 0.7);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: var(--space-md);
+}
+
+.experience-header {
+    padding: var(--space-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.experience-body {
+    padding: var(--space-md);
+}
+
+.experience-highlights li {
+    margin-bottom: var(--space-md);
+}
+
+/* Cleaner Project Cards */
+.project-card {
+    background-color: rgba(18, 18, 18, 0.7);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: var(--space-md);
+}
+
+.project-content {
+    padding: var(--space-lg);
+}
+
+.project-description {
+    margin-bottom: var(--space-md);
+}
+
+/* Cleaner Gallery */
+.gallery-item {
+    background-color: rgba(18, 18, 18, 0.7);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.gallery-item-content {
+    padding: var(--space-md);
+}
+
+/* Cleaner Contact Section */
+.contact-content {
+    gap: var(--space-lg);
+}
+
+.connect-container {
+    padding: var(--space-lg);
+    border-radius: 16px;
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: var(--text-4xl);
+    }
+    
+    .section-title {
+        font-size: var(--text-3xl);
+    }
+    
+    .why-hire-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        /* Adjust spacing for mobile */
+        --space-lg: 2rem;
+        --space-xl: 3rem;
+    }
+    
+    .hero-title {
+        font-size: var(--text-3xl);
+    }
+    
+    .hero-description {
+        font-size: var(--text-lg);
+    }
+    
+    .about-intro {
+        font-size: var(--text-xl);
+    }
+    
+    .why-hire-intro p {
+        font-size: var(--text-lg);
+    }
+    
+    .why-hire-cta p {
+        font-size: var(--text-lg);
+    }
+}
